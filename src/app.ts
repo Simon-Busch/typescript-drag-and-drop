@@ -58,9 +58,20 @@ class ProjectList {
 		//render in the DOM
 		const importedHTMLContent = document.importNode(this.templateElement.content, true);
 		this.element = importedHTMLContent.firstElementChild as HTMLElement;
-    this.element.id = `${type}-projects`;
+    this.element.id = `${this.type}-projects`;
+    this.attach();
+    this.renderContent();
   }
-  
+
+  private renderContent() {
+    const listId = `${this.type}-projects-list`;
+    this.element.querySelector('ul')!.id = listId;
+    this.element.querySelector('h2')!.textContent = this.type.toUpperCase() + ' PROJECTS'
+  }
+
+	private attach() {
+		this.hostElement.insertAdjacentElement('beforeend', this.element);
+	}
 
 }
 
@@ -153,3 +164,5 @@ class ProjectInput {
 }
 
 const prjInput = new ProjectInput();
+const activeProjectList = new ProjectList('active');
+const finishedProjectList = new ProjectList('finished');
