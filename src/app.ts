@@ -14,10 +14,12 @@ class Project {
 	) {}
 }
 
+type Listener = (items: Project[]) => void;
+
 //Project state management
 
 class ProjectState {
-	private listeners: any[] = [];
+	private listeners: Listener[] = [];
 	private projects: Project[] = [];
 	private static instance: ProjectState;
 
@@ -31,7 +33,7 @@ class ProjectState {
 		return this.instance;
 	}
 
-	addListener(listenerFn: Function) {
+	addListener(listenerFn: Listener) {
 		this.listeners.push(listenerFn);
 	}
 
@@ -118,7 +120,7 @@ class ProjectList {
 		this.element = importedHTMLContent.firstElementChild as HTMLElement;
 		this.element.id = `${this.type}-projects`;
 
-		projectsState.addListener((projects: any[]) => {
+		projectsState.addListener((projects: Project[]) => {
 			this.assignedProject = projects;
 			this.renderProjects();
 		});
