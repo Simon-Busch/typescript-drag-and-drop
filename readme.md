@@ -2,4 +2,8 @@
 
 ## Get started 
 # npm i 
+
+
+Start the project
+# npm start
 # tsc -w

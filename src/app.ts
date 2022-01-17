@@ -45,6 +45,24 @@ function validate(validatableInput: Validatable) {
 
   return isValid;
 }
+// project list class
+class ProjectList {
+  templateElement: HTMLTemplateElement; 
+	hostElement: HTMLDivElement;
+  element: HTMLElement;
+
+  constructor(private type: 'active' | 'finished') {
+    this.templateElement = document.getElementById('project-list') as HTMLTemplateElement;
+		this.hostElement = document.getElementById('app') as HTMLDivElement;
+
+		//render in the DOM
+		const importedHTMLContent = document.importNode(this.templateElement.content, true);
+		this.element = importedHTMLContent.firstElementChild as HTMLElement;
+    this.element.id = `${type}-projects`;
+  }
+  
+
+}
 
 //project Input class
 class ProjectInput {

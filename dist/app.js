@@ -35,6 +35,9 @@ function validate(validatableInput) {
     }
     return isValid;
 }
+class ProjectList {
+    constructor() { }
+}
 class ProjectInput {
     constructor() {
         this.templateElement = document.getElementById('project-input');
