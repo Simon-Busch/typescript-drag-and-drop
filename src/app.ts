@@ -1,3 +1,35 @@
+//Project state management
+
+class ProjectState {
+  private projects: any [] = [];
+
+  private static instance: ProjectState;
+
+  private constructor() {
+
+  }
+  
+  static getInstance() {
+    if (this.instance) {
+      return this.instance
+    }
+    this.instance = new ProjectState();
+    return this.instance;
+  }
+  addProject(title: string, description: string, numberOfPeople: number) {
+    const newProject = {
+      id: Math.random().toString(),
+      title: title,
+      description: description,
+      people: numberOfPeople
+    }
+    this.projects.push(newProject);
+  }
+}
+
+// create a singleton to make sure we only have 1 object always the same.
+const projectsState = ProjectState.getInstance();
+
 //autobind decorator
 function autobind(_: any, _2: string, description: PropertyDescriptor) {
   const originalMethod = description.value;
@@ -45,6 +77,7 @@ function validate(validatableInput: Validatable) {
 
   return isValid;
 }
+
 // project list class
 class ProjectList {
   templateElement: HTMLTemplateElement; 
@@ -72,7 +105,6 @@ class ProjectList {
 	private attach() {
 		this.hostElement.insertAdjacentElement('beforeend', this.element);
 	}
-
 }
 
 //project Input class
@@ -148,7 +180,7 @@ class ProjectInput {
     const userInput = this.gatherUserInput();
     if (Array.isArray(userInput)) {
       const [title, description, people] = userInput;
-      console.log(title, description, people);
+      
       this.clearInputs();
     }
   }
