@@ -54,7 +54,7 @@ class ProjectState {
 }
 
 // create a singleton to make sure we only have 1 object always the same.
-const projectsState = ProjectState.getInstance();
+const projectState = ProjectState.getInstance();
 
 //autobind decorator
 function autobind(_: any, _2: string, description: PropertyDescriptor) {
@@ -120,8 +120,15 @@ class ProjectList {
 		this.element = importedHTMLContent.firstElementChild as HTMLElement;
 		this.element.id = `${this.type}-projects`;
 
-		projectsState.addListener((projects: Project[]) => {
-			this.assignedProject = projects;
+		projectState.addListener((projects: Project[]) => {
+      const relevantProject = projects.filter(prj => {
+        if (this.type === 'active') {
+          return prj.status === ProjectStatus.Active
+        } else {
+          return prj.status === ProjectStatus.Finished
+        }
+      });
+			this.assignedProject = relevantProject;
 			this.renderProjects();
 		});
 
@@ -131,6 +138,8 @@ class ProjectList {
 
 	private renderProjects() {
 		const listEl = document.getElementById(`${this.type}-projects-list`)! as HTMLUListElement;
+    // get rid of all list item and re-render
+    listEl.innerHTML = '';
 		for (const projItem of this.assignedProject) {
 			// prokItem = {  id: Math.random().toString(), title: title, description: description,  people: numberOfPeople }
 			const listItem = document.createElement('li');
@@ -220,7 +229,7 @@ class ProjectInput {
 		const userInput = this.gatherUserInput();
 		if (Array.isArray(userInput)) {
 			const [ title, description, people ] = userInput;
-			projectsState.addProject(title, description, people);
+			projectState.addProject(title, description, people);
 			this.clearInputs();
 		}
 	}

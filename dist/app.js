@@ -42,7 +42,7 @@ class ProjectState {
         }
     }
 }
-const projectsState = ProjectState.getInstance();
+const projectState = ProjectState.getInstance();
 function autobind(_, _2, description) {
     const originalMethod = description.value;
     const adjDescription = {
@@ -82,8 +82,16 @@ class ProjectList {
         const importedHTMLContent = document.importNode(this.templateElement.content, true);
         this.element = importedHTMLContent.firstElementChild;
         this.element.id = `${this.type}-projects`;
-        projectsState.addListener((projects) => {
-            this.assignedProject = projects;
+        projectState.addListener((projects) => {
+            const relevantProject = projects.filter(prj => {
+                if (this.type === 'active') {
+                    return prj.status === ProjectStatus.Active;
+                }
+                else {
+                    return prj.status === ProjectStatus.Finished;
+                }
+            });
+            this.assignedProject = relevantProject;
             this.renderProjects();
         });
         this.attach();
@@ -91,6 +99,7 @@ class ProjectList {
     }
     renderProjects() {
         const listEl = document.getElementById(`${this.type}-projects-list`);
+        listEl.innerHTML = '';
         for (const projItem of this.assignedProject) {
             const listItem = document.createElement('li');
             listItem.textContent = projItem.title;
@@ -156,7 +165,7 @@ class ProjectInput {
         const userInput = this.gatherUserInput();
         if (Array.isArray(userInput)) {
             const [title, description, people] = userInput;
-            projectsState.addProject(title, description, people);
+            projectState.addProject(title, description, people);
             this.clearInputs();
         }
     }
